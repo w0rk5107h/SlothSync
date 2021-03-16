@@ -153,5 +153,7 @@ WantedBy = multi-user.target
     if setup == True:
         print('\033[0;33;40m[+] Setup Complete.\033[0;37;40m')
         print(f'\033[0;33;40m[+] Now you can access this server at \033[0;36;40m<your server\'s public IP>:{port}\033[0;37;40m')
+        log('Setup completed successfully.')
     else:
         print('\033[0;31;40m[-] Setup failed check the log file.\033[0;37;40m')
+        log('Setup failed.')
