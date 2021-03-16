@@ -28,7 +28,10 @@ if __name__ == '__main__':
 
     setup = True
 
-    os.system('rm -r /opt/SlothSync')
+    try:
+        os.system('rm -r /opt/SlothSync')
+    except:
+        pass
 
     #checking for root
     if os.getuid() != 0:
