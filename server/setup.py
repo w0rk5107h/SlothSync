@@ -134,7 +134,7 @@ WantedBy = multi-user.target
         os.system('mkdir /opt/SlothSync/server/.keys')
         key = RSA.generate(4096)
         f = open('/opt/SlothSync/server/.keys/rsa_public.pem', 'wb')
-        f.write(key.public_key().export_key('PEM'))
+        f.write(key.publickey().export_key('PEM'))
         f.close()
         f = open('/opt/SlothSync/server/.keys/rsa_private.pem', 'wb')
         f.write(key.export_key('PEM'))
