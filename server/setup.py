@@ -89,7 +89,7 @@ WantedBy = multi-user.target
     #initializing port
     try:
         while True:
-            port = input('\033[0;33;40m[+] Enter a port on which you want to run this service : \033[0;37;40m')
+            port = int(input('\033[0;33;40m[+] Enter a port on which you want to run this service : \033[0;37;40m'))
             if port > 1000:
                 break
             else:
