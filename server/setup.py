@@ -13,7 +13,7 @@ Welcome to \033[0;33;40m
  ___/ / / /_/ / /_/ / / /__/ / /_/ / / / / /__  
 /____/_/\____/\__/_/ /_/____/\__, /_/ /_/\___/  
                             /____/   
-\033[1;37;40m               
+\033[0;37;40m               
 '''
 
 def log(message):
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     #checking for root
     if os.getuid() != 0:
-        print('\033[0;31;40m[-] Run this as root.\033[1;37;40m')
+        print('\033[0;31;40m[-] Run this as root.\033[0;37;40m')
         exit()
 
     #making service
@@ -62,42 +62,42 @@ WantedBy = multi-user.target
         log('Service created successfully.')
     except Exception as e:
         log(f'Failed to create service -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to create service.\033[1;37;40m')
+        print('\033[0;31;40m[-] Failed to create service.\033[0;37;40m')
         setup = False
 
     #initializing password
     try:
         while True:
             while True:
-                password = getpass.getpass(prompt='\033[0;33;40m[+] Enter a password : \033[1;37;40m')
+                password = getpass.getpass(prompt='\033[0;33;40m[+] Enter a password : \033[0;37;40m')
                 if len(password) >= 8:
                     break
                 else:
-                    print('\033[1;31;40m[-] Enter a password with minimum 8 chars :(\033[1;37;40m')
-            conf_password = getpass.getpass(prompt='\033[0;33;40m[+] Re-enter the password : \033[1;37;40m')
+                    print('\033[0;31;40m[-] Enter a password with minimum 8 chars :(\033[0;37;40m')
+            conf_password = getpass.getpass(prompt='\033[0;33;40m[+] Re-enter the password : \033[0;37;40m')
             if password == conf_password:
                 pass_hash = hashlib.md5(password.encode())
                 break
             else:
-                print('\033[0;31;40m[-] Passwords don\'t match :( !!\nTry again...\n\n\033[1;37;40m')
+                print('\033[0;31;40m[-] Passwords don\'t match :( !!\nTry again...\n\n\033[0;37;40m')
         log('Password initialized successfully.')
     except Exception as e:
         log(f'Failed to initialize password -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to initialize password.\033[1;37;40m')
+        print('\033[0;31;40m[-] Failed to initialize password.\033[0;37;40m')
         setup = False
 
     #initializing port
     try:
         while True:
-            port = input('\033[1;33;40m[+] Enter a port on which you want to run this service : \033[1;37;40m')
+            port = input('\033[0;33;40m[+] Enter a port on which you want to run this service : \033[0;37;40m')
             if port > 1000:
                 break
             else:
-                print('\033[1;31;40m[-] Invalid port, choose something larger than 1000.\033[1;37;40m')
+                print('\033[0;31;40m[-] Invalid port, choose something larger than 1000.\033[0;37;40m')
         log('Port initialized successfully.')
     except Exception as e:
         log(f'Failed to initialized port -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to initialize port.\033[1;37;40m')
+        print('\033[0;31;40m[-] Failed to initialize port.\033[0;37;40m')
         setup = False
 
     #setting up the files
@@ -111,7 +111,7 @@ WantedBy = multi-user.target
         log('File setup successfull.')
     except Exception as e:
         log(f'Failed to setup files -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to setup files.\033[1;37;40m')
+        print('\033[0;31;40m[-] Failed to setup files.\033[0;37;40m')
         setup = False
 
     #creating config file
@@ -126,7 +126,7 @@ WantedBy = multi-user.target
         log('Config file created.')
     except Exception as e:
         log(f'Config file creation failed -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to create config.\033[1;37;40m')
+        print('\033[0;31;40m[-] Failed to create config.\033[0;37;40m')
         setup = False
 
     #generating RSA key pair
@@ -146,7 +146,7 @@ WantedBy = multi-user.target
         log('RSA key pair created successfully.')
     except Exception as e:
         log(f'RSA key pair generation failed -- {str(e)}')
-        print('\033[0;31;40m[-] RSA key pair generation failed.\033[1;37;40m')
+        print('\033[0;31;40m[-] RSA key pair generation failed.\033[0;37;40m')
         setup = False
 
     #setup complete
@@ -154,4 +154,4 @@ WantedBy = multi-user.target
         print('\033[0;33;40m[+] Setup Complete.\033[0;37;40m')
         print(f'\033[0;33;40m[+] Now you can access this server at \033[0;36;40m<your server\'s public IP>:{port}\033[0;37;40m')
     else:
-        print('\033[0;31;40m[-] Setup failed check the log file.\033[1;37;40m')
+        print('\033[0;31;40m[-] Setup failed check the log file.\033[0;37;40m')
