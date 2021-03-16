@@ -21,9 +21,10 @@ def log(message):
     now = datetime.now()
     f.write(f'[{now.strftime("%d-%m-%Y")}] -- [{now.strftime("%H:%M:%S")}] --> {message}\n')
     f.close()
-
+            
 if __name__ == '__main__':
     #printing banner
+    os.system('clear')
     print(BANNER)
 
     setup = True
