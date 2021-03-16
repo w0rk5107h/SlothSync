@@ -31,6 +31,7 @@ if __name__ == '__main__':
 
     try:
         os.system('rm -r /opt/SlothSync')
+        os.system('mkdir /opt/SlothSync/server/log')
     except:
         pass
 
@@ -107,7 +108,6 @@ WantedBy = multi-user.target
         os.system('cp ./slothsyncserver.py /opt/SlothSync/server')
         os.system('chown root:root /opt/SlothSync/server/slothsyncserver.py')
         os.system('chmod 755 /opt/SlothSync/server/slothsyncserver.py')
-        os.system('mkdir /opt/SlothSync/server/log')
         log('File setup successfull.')
     except Exception as e:
         log(f'Failed to setup files -- {str(e)}')
