@@ -76,7 +76,7 @@ WantedBy = multi-user.target
                     print('\033[0;31;40m[-] Enter a password with minimum 8 chars :(\033[0;37;40m')
             conf_password = getpass.getpass(prompt='\033[0;33;40m[+] Re-enter the password : \033[0;37;40m')
             if password == conf_password:
-                pass_hash = hashlib.md5(password.encode())
+                pass_hash = hashlib.md5(password.encode()).decode()
                 break
             else:
                 print('\033[0;31;40m[-] Passwords don\'t match :( !!\nTry again...\n\n\033[0;37;40m')
