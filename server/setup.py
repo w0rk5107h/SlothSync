@@ -31,6 +31,8 @@ if __name__ == '__main__':
 
     try:
         os.system('rm -r /opt/SlothSync')
+        os.system('mkdir /opt/SlothSync')
+        os.system('mkdir /opt/SlothSync/server')
         os.system('mkdir /opt/SlothSync/server/log')
     except:
         pass
@@ -100,8 +102,6 @@ WantedBy = multi-user.target
 
     #setting up the files
     try:
-        os.system('mkdir /opt/SlothSync')
-        os.system('mkdir /opt/SlothSync/server')
         os.system('cp ./slothsyncserver /opt/SlothSync/server')
         os.system('chown root:root /opt/SlothSync/server/slothsyncserver')
         os.system('chmod 755 /opt/SlothSync/server/slothsyncserver')
