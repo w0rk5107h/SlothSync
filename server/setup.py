@@ -27,24 +27,25 @@ if __name__ == '__main__':
     os.system('clear')
     print(BANNER)
 
-    setup = True
-
-    try:
-        os.system('rm -r /opt/SlothSync')
-        os.system('mkdir /opt/SlothSync')
-        os.system('mkdir /opt/SlothSync/server')
-        os.system('mkdir /opt/SlothSync/server/log')
-    except:
-        pass
-
     #checking for root
     if os.getuid() != 0:
-        print('\033[0;31;40m[-] Run this as root.\033[0;37;40m')
+        print('\033[0;31;40m[-] Run this as root.\n\033[0;37;40m')
         exit()
+
+    setup = True
+
+    #setting up log folder
+    try:
+        os.system('rm -r /opt/SlothSync/server 2>/dev/null')
+        os.system('mkdir /opt/SlothSync 2>/dev/null')
+        os.system('mkdir /opt/SlothSync/server 2>/dev/null')
+        os.system('mkdir /opt/SlothSync/server/log 2>/dev/null')
+    except:
+        print('\033[0;31;40m[-] Failed to setup log folder.\033[0;37;40m')
 
     #making service
     try:
-        f = open('/etc/systemd/system/slothsync.service', 'w')
+        f = open('/etc/systemd/system/slothsync-server.service', 'w')
         serviceContent = '''[Unit]
 Description = SlothSync Server
 
@@ -53,6 +54,7 @@ Type = forking
 ExecStart = /opt/SlothSync/server/slothsyncserver start
 ExecStop = /opt/SlothSync/server/slothsyncserver stop
 ExecReload = /opt/SlothSync/server/slothsyncserver reload
+ExecStatus = /opt/SlothSync/server/slothsyncserver status
 
 [Install]
 WantedBy = multi-user.target
@@ -65,11 +67,17 @@ WantedBy = multi-user.target
         print('\033[0;31;40m[-] Failed to create service.\033[0;37;40m')
         setup = False
 
-    #initializing password
+    #setting up user account
     try:
         while True:
+            username = input('\033[0;33;40m[+] Enter a username for your account : \033[0;37;40m')
+            if len(username) >= 4:
+                break
+            else:
+                print('\033[0;31;40m[-] Enter a username with minimum 4 chars :(\033[0;37;40m')
+        while True:
             while True:
-                password = getpass.getpass(prompt='\033[0;33;40m[+] Enter a password : \033[0;37;40m')
+                password = getpass.getpass(prompt='\033[0;33;40m[+] Enter a password for this account : \033[0;37;40m')
                 if len(password) >= 8:
                     break
                 else:
@@ -80,10 +88,10 @@ WantedBy = multi-user.target
                 break
             else:
                 print('\033[0;31;40m[-] Passwords don\'t match :( !!\nTry again...\n\n\033[0;37;40m')
-        log('Password initialized successfully.')
+        log('User account setup successfully.')
     except Exception as e:
-        log(f'Failed to initialize password -- {str(e)}')
-        print('\033[0;31;40m[-] Failed to initialize password.\033[0;37;40m')
+        log(f'Failed to setup account -- {str(e)}')
+        print('\033[0;31;40m[-] Failed to setup account.\033[0;37;40m')
         setup = False
 
     #initializing port
@@ -102,12 +110,12 @@ WantedBy = multi-user.target
 
     #setting up the files
     try:
-        os.system('cp ./slothsyncserver /opt/SlothSync/server')
-        os.system('chown root:root /opt/SlothSync/server/slothsyncserver')
-        os.system('chmod 755 /opt/SlothSync/server/slothsyncserver')
-        os.system('cp ./slothsyncserver.py /opt/SlothSync/server')
-        os.system('chown root:root /opt/SlothSync/server/slothsyncserver.py')
-        os.system('chmod 755 /opt/SlothSync/server/slothsyncserver.py')
+        os.system('cp ./slothsyncserver /opt/SlothSync/server 2>/dev/null')
+        os.system('chown root:root /opt/SlothSync/server/slothsyncserver 2>/dev/null')
+        os.system('chmod 755 /opt/SlothSync/server/slothsyncserver 2>/dev/null')
+        os.system('cp ./slothsyncserver.py /opt/SlothSync/server 2>/dev/null')
+        os.system('chown root:root /opt/SlothSync/server/slothsyncserver.py 2>/dev/null')
+        os.system('chmod 755 /opt/SlothSync/server/slothsyncserver.py 2>/dev/null')
         log('File setup successfull.')
     except Exception as e:
         log(f'Failed to setup files -- {str(e)}')
@@ -118,7 +126,8 @@ WantedBy = multi-user.target
     try:
         f = open('/opt/SlothSync/server/config.json', 'w')
         config = {
-            'pass':pass_hash.hexdigest(),
+            'username':username,
+            'password_hash':pass_hash.hexdigest(),
             'port':port
         }
         json.dump(config, f)
@@ -131,7 +140,7 @@ WantedBy = multi-user.target
 
     #generating RSA key pair
     try:
-        os.system('mkdir /opt/SlothSync/server/.keys')
+        os.system('mkdir /opt/SlothSync/server/.keys 2>/dev/null')
         key = RSA.generate(4096)
         f = open('/opt/SlothSync/server/.keys/rsa_public.pem', 'wb')
         f.write(key.publickey().exportKey('PEM'))
@@ -139,10 +148,10 @@ WantedBy = multi-user.target
         f = open('/opt/SlothSync/server/.keys/rsa_private.pem', 'wb')
         f.write(key.exportKey('PEM'))
         f.close()
-        os.system('chown root:root /opt/SlothSync/server/.keys/rsa_private.pem')
-        os.system('chmod 400 /opt/SlothSync/server/.keys/rsa_private.pem')
-        os.system('chown root:root /opt/SlothSync/server/.keys/rsa_public.pem')
-        os.system('chmod 444 /opt/SlothSync/server/.keys/rsa_public.pem')
+        os.system('chown root:root /opt/SlothSync/server/.keys/rsa_private.pem 2>/dev/null')
+        os.system('chmod 400 /opt/SlothSync/server/.keys/rsa_private.pem 2>/dev/null')
+        os.system('chown root:root /opt/SlothSync/server/.keys/rsa_public.pem 2>/dev/null')
+        os.system('chmod 444 /opt/SlothSync/server/.keys/rsa_public.pem 2>/dev/null')
         log('RSA key pair created successfully.')
     except Exception as e:
         log(f'RSA key pair generation failed -- {str(e)}')
